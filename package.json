@@ -1,0 +1,23 @@
+{
+  "name": "whatsapp-api",
+  "version": "1.0.0",
+  "description": "WhatsApp API untuk project web",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "-"
+  },
+  "keywords": [
+    "WhatsApp"
+  ],
+  "author": "Edy Santosa Putra",
+  "license": "ISC",
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.19.5"
+  }
+}
