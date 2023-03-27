@@ -1,11 +1,14 @@
 const qrcode = require('qrcode-terminal');
-const http = require('http');
+const express = require('express');
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const client = new Client({
     authStrategy: new LocalAuth()
 });
  
+const app = express();
+
+
 client.on('qr', (qr) => {
     qrcode.generate(qr, {small: true});
 });
@@ -20,5 +23,16 @@ client.on('message', msg => {
     }
 });
 
-client.initialize();
- 
+// client.initialize();
+
+
+app.listen(8000, function() {
+    console.log('App express berjalan di port *:8000');
+});
+
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: true,
+        message: "Hallo worrld"
+    });
+});
