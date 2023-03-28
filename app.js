@@ -1,29 +1,32 @@
 const qrcode = require('qrcode-terminal');
 const express = require('express');
-
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const client = new Client({
-    authStrategy: new LocalAuth()
-});
- 
 const app = express();
 
+// const { Client, LocalAuth } = require('whatsapp-web.js');
+// const whatsapp = new Client({
+//     authStrategy: new LocalAuth()
+// });
 
-client.on('qr', (qr) => {
-    qrcode.generate(qr, {small: true});
-});
+// whatsapp.on('qr', (qr) => {
+//     qrcode.generate(qr, {small: true});
+// });
 
-client.on('ready', () => {
-    console.log('Client is ready!');
-});
+// whatsapp.on('ready', () => {
+//     console.log('Client is ready!');
+// });
 
-client.on('message', msg => {
-    if (msg.body == '!ping') {
-        msg.reply('pong');
-    }
-});
+// whatsapp.on('message', msg => {
+//     if (msg.body == '!ping') {
+//         msg.reply('pong');
+//     } else if (msg.body == 'status') {
+//         whatsapp.getState().then((result) => { 
+//             console.log("Whatsapp Client State =", result);
+//         });
+//     }
+// });
 
-// client.initialize();
+// whatsapp.initialize();
+
 
 
 app.listen(8000, function() {
@@ -32,7 +35,14 @@ app.listen(8000, function() {
 
 app.get('/', (req, res) => {
     res.status(200).json({
-        status: true,
-        message: "Hallo worrld"
+        result: true,
+        message: "Hallo world"
+    });
+});
+
+app.post('/status', (req, res) => {
+    res.status(200).json({
+        result: true,
+        message: "Hallo worrldxxx"
     });
 });
