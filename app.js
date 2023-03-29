@@ -7,12 +7,15 @@ const whatsapp = new Client({
     authStrategy: new LocalAuth()
 });
 
+var cors = require('cors');
+app.use(cors());
 
 var currentQrCode;
 
 whatsapp.on('qr', (qr) => {
     qrcode.generate(qr, {small: true});
     currentQrCode = qr;
+    console.log(qr);
 });
 
 whatsapp.on('ready', () => {
@@ -25,7 +28,7 @@ whatsapp.on('message', msg => {
     }
 });
 
-whatsapp.initialize();
+// whatsapp.initialize();
 
 
 // Jalankan express di port 8000
@@ -43,27 +46,33 @@ app.get('/', (req, res) => {
 
 // Dapatkan status koneksi whatsapp-js
 app.get('/status', (req, res) => {
-    whatsapp.getState().then((result) => {
-        let returnStatus = true;
-        if (result !== 'CONNECTED') {
-            returnStatus = false;
-        }
-        res.status(200).json({
-            result: returnStatus,
-            message: result
-        });
-    }).catch(function(error) {
-        res.status(200).json({
-            result: false,
-            message: 'DISCONNECTED'
-        });
+    // whatsapp.getState().then((result) => {
+    //     let returnStatus = true;
+    //     if (result !== 'CONNECTED') {
+    //         returnStatus = false;
+    //     }
+    //     res.status(200).json({
+    //         result: returnStatus,
+    //         message: result
+    //     });
+    // }).catch(function(error) {
+    //     res.status(200).json({
+    //         result: false,
+    //         message: 'DISCONNECTED'
+    //     });
+    // });
+
+    res.status(200).json({
+        result: true,
+        message: "xxxx"
     });
+
 });
 
 // Dapatkan qrcode untuk otentifikasi
 app.get('/qr', (req, res) => {
-    res.status(200).json({
-        result: true,
-        message: currentQrCode
-    });
+    // res.status(200).json({
+    //     result: true,
+    //     message: currentQrCode
+    // });
 });
