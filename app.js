@@ -28,13 +28,13 @@ whatsapp.on('disconnected', () => {
     whatsapp.initialize();
 });
 
-whatsapp.on('message', msg => {
+whatsapp.on('message', async msg => {
     if (msg.body == '!ping') {
         msg.reply('pong');
     }
 });
 
-// whatsapp.initialize();
+whatsapp.initialize();
 
 
 // Jalankan express di port 8000
@@ -80,6 +80,32 @@ app.get('/qr', (req, res) => {
 // Kirim pesan whatsapp
 app.post('/send', (req, res) => {
     let data = req.body;
-    res.send('Data Received: ' + data.yyy);
-    console.log(data.yyy);
+    // res.send('Number : ' + data.number);
+    whatsapp.sendMessage(sanitizeNumber(data.number), data.message).then((result) => {
+        res.status(200).json({
+            result: true,
+            message: "Pesan terkirim"
+        });
+    }).catch(function(error) {
+        res.status(500).json({
+            result: false,
+            message: error.message
+        });
+    });;
 });
+
+function sanitizeNumber(number) {
+    //First remove all spaces:
+    number = number.replace(/\s/g, '');
+
+    if(number.startsWith("+")){
+        // Kalo awalan nomor ada + berarti hilangkan +nya aja
+        number = number.substr(1);
+    } else if(number.startsWith("0")){
+        // Kalo awalan 0 ganti dengan 62
+        number = "62" + number.substr(1);
+    }
+
+    // Format ke nomor wa dan return
+    return number.includes('@c.us') ? number : `${number}@c.us`;
+}
