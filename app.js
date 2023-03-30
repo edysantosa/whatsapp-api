@@ -1,12 +1,14 @@
 const qrcode = require('qrcode-terminal');
 const express = require('express');
-const app = express();
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const whatsapp = new Client({
     authStrategy: new LocalAuth()
 });
 
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 var cors = require('cors');
 app.use(cors());
 
@@ -32,7 +34,7 @@ whatsapp.on('message', msg => {
     }
 });
 
-whatsapp.initialize();
+// whatsapp.initialize();
 
 
 // Jalankan express di port 8000
@@ -73,4 +75,11 @@ app.get('/qr', (req, res) => {
         result: true,
         message: currentQrCode
     });
+});
+
+// Kirim pesan whatsapp
+app.post('/send', (req, res) => {
+    let data = req.body;
+    res.send('Data Received: ' + data.yyy);
+    console.log(data.yyy);
 });
