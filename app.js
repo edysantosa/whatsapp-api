@@ -7,10 +7,10 @@ const whatsapp = new Client({
 });
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// app.use(express.json({limit: '5mb'}));
-// app.use(express.urlencoded({limit: '5mb', extended: true}));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit: '25mb'}));
+app.use(express.urlencoded({limit: '25mb', extended: true}));
 
 var cors = require('cors');
 app.use(cors());
@@ -41,7 +41,7 @@ whatsapp.on('message', async msg => {
     }
 });
 
-// whatsapp.initialize();
+whatsapp.initialize();
 
 
 // Jalankan express di port 8000
@@ -114,28 +114,19 @@ app.post('/send-image', (req, res) => {
 
     var media = new MessageMedia(data.mimetype, data.image, data.filename);
 
-
+    whatsapp.sendMessage(sanitizeNumber(data.number), media, {caption: data.caption}).then((result) => {
         res.status(200).json({
             result: true,
             message: "Pesan terkirim"
         });
-
-
-
-
-    // whatsapp.sendMessage(sanitizeNumber(data.number), media, {caption: data.caption}).then((result) => {
-    //     res.status(200).json({
-    //         result: true,
-    //         message: "Pesan terkirim"
-    //     });
-    // }).catch(function(error) {
-    //     console.log('dog');
-    //     console.log(error);
-    //     res.status(500).json({
-    //         result: false,
-    //         message: error.message
-    //     });
-    // });;
+    }).catch(function(error) {
+        console.log('dog');
+        console.log(error);
+        res.status(500).json({
+            result: false,
+            message: error.message
+        });
+    });;
 });
 
 function sanitizeNumber(number) {
