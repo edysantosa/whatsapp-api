@@ -46,7 +46,7 @@ whatsapp.initialize();
 
 // Jalankan express di port 8000
 app.listen(8000, function() {
-    console.log('App express berjalan di port *:8000');
+    console.log('Server berjalan di port *:8000');
 });
 
 // Testing get
@@ -87,8 +87,8 @@ app.get('/qr', (req, res) => {
 // Kirim pesan whatsapp
 app.post('/send-message', (req, res) => {
     let data = req.body;
-    // res.send('Number : ' + data.number);
-    whatsapp.sendMessage(sanitizeNumber(data.number), data.message).then((result) => {
+    // res.send('Number : ' + data.phone);
+    whatsapp.sendMessage(sanitizePhoneNumber(data.phone), data.message).then((result) => {
         res.status(200).json({
             result: true,
             message: "Pesan terkirim"
@@ -105,23 +105,21 @@ app.post('/send-message', (req, res) => {
 app.post('/send-image', (req, res) => {
     let data = req.body;
 
-    if (!data.image || !data.mimetype || !data.number) {
+    if (!data.image || !data.mimetype || !data.phone) {
         res.status(200).json({
             result: true,
-            message: "Gambar/mimetype/number perlu diisi"
+            message: "Gambar/mimetype/phone perlu diisi"
         });
     }
 
     var media = new MessageMedia(data.mimetype, data.image, data.filename);
 
-    whatsapp.sendMessage(sanitizeNumber(data.number), media, {caption: data.caption}).then((result) => {
+    whatsapp.sendMessage(sanitizePhoneNumber(data.phone), media, {caption: data.caption}).then((result) => {
         res.status(200).json({
             result: true,
             message: "Pesan terkirim"
         });
     }).catch(function(error) {
-        console.log('dog');
-        console.log(error);
         res.status(500).json({
             result: false,
             message: error.message
@@ -129,18 +127,18 @@ app.post('/send-image', (req, res) => {
     });;
 });
 
-function sanitizeNumber(number) {
+function sanitizePhoneNumber(phone) {
     //First remove all spaces:
-    number = number.replace(/\s/g, '');
+    phone = phone.replace(/\s/g, '');
 
-    if(number.startsWith("+")){
+    if(phone.startsWith("+")){
         // Kalo awalan nomor ada + berarti hilangkan +nya aja
-        number = number.substr(1);
-    } else if(number.startsWith("0")){
+        phone = phone.substr(1);
+    } else if(phone.startsWith("0")){
         // Kalo awalan 0 ganti dengan 62
-        number = "62" + number.substr(1);
+        phone = "62" + phone.substr(1);
     }
 
     // Format ke nomor wa dan return
-    return number.includes('@c.us') ? number : `${number}@c.us`;
+    return phone.includes('@c.us') ? phone : `${phone}@c.us`;
 }
