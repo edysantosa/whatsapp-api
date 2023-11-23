@@ -36,6 +36,7 @@ whatsapp.on('change_state', (reason) => {
 });
 
 whatsapp.on('message', async msg => {
+    console.log(msg.body);
     if (msg.body == '!ping') {
         msg.reply('pong');
     }
